@@ -1,0 +1,508 @@
+{
+	"info": {
+		"_postman_id": "b5481b7e-2dfd-4d48-ac25-9042c7c3e8d3",
+		"name": "file-system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48249074"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"abc@gmail.com\",\"mobile\":\"9876543210\", \"fullname\":\"Abc\", \"password\":\"abc@123\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/signup",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// 1. Get token from login response\r",
+							"let res = pm.response.json();\r",
+							"let token = res.token;\r",
+							"\r",
+							"// 2. Save the token for future requests\r",
+							"pm.environment.set(\"authToken\", token);\r",
+							"\r",
+							"// 3. Decode JWT payload (middle part)\r",
+							"let payloadBase64 = token.split('.')[1];\r",
+							"let payloadJson = atob(payloadBase64); // decode Base64\r",
+							"let payload = JSON.parse(payloadJson);\r",
+							"\r",
+							"// 4. Save user info as environment variables\r",
+							"pm.environment.set(\"userEmail\", payload.email);\r",
+							"pm.environment.set(\"userName\", payload.fullname);\r",
+							"pm.environment.set(\"userMobile\", payload.mobile);\r",
+							"pm.environment.set(\"userId\", payload.id);\r",
+							"\r",
+							"console.log(\"Decoded JWT payload:\", payload);\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"annpurnagupta0404@gmail.com\", \"password\":\"123\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/login",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Featch Files",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFubnB1cm5hZ3VwdGEwNDA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjYwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFubnB1cm5hIiwiaWQiOiI2OGM5MWMzNTAzNDI2OWRiYmExYWZlNTciLCJpYXQiOjE3NTgwMTA1MTMsImV4cCI6MTc1ODYxNTMxM30.2UGxjJFwKX4karDrMvfW7b42_btbQTVjPQrg0V_Itxc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/file?limit=10",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"file"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "send-mail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJtb2JpbGUiOiI5ODc2NTQzMjEwIiwiZnVsbG5hbWUiOiJhYmMiLCJpZCI6IjY4YjZiYWM1ZDFjNzMwNDQ0MjAyZjkzNiIsImlhdCI6MTc1NzkyMzE3OCwiZXhwIjoxNzU4NTI3OTc4fQ.uDn5PhQsro3PRcQsJ9dY8LbkmtcRLWUiLVCdZrQpF2c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"to\":\"annpurna.gupta@metalbook.com@gmail.com\", \"subject\":\"Hello from Node.js\", \"text\":\"This is a test email using Gmail SMTP!\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/send-mail",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"send-mail"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetch-dashboard",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFubnB1cm5hZ3VwdGEwNDA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjYwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFubnB1cm5hIiwiaWQiOiI2OGM5MWMzNTAzNDI2OWRiYmExYWZlNTciLCJpYXQiOjE3NTgwMTA1MTMsImV4cCI6MTc1ODYxNTMxM30.2UGxjJFwKX4karDrMvfW7b42_btbQTVjPQrg0V_Itxc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/dashboard",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete file",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJtb2JpbGUiOiI5ODc2NTQzMjEwIiwiZnVsbG5hbWUiOiJhYmMiLCJpZCI6IjY4YjZiYWM1ZDFjNzMwNDQ0MjAyZjkzNiIsImlhdCI6MTc1NzkyMzE3OCwiZXhwIjoxNzU4NTI3OTc4fQ.uDn5PhQsro3PRcQsJ9dY8LbkmtcRLWUiLVCdZrQpF2c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/file?id=68b8f078fd9d58ff6b0d5469&public_id=uploads/car_a21fde43-0ab2-4f7e-bd22-77d45b390a1c",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"file"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "68b8f078fd9d58ff6b0d5469"
+						},
+						{
+							"key": "public_id",
+							"value": "uploads/car_a21fde43-0ab2-4f7e-bd22-77d45b390a1c"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "token-verify",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudTA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjUwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFudSIsImlkIjoiNjhjYTU3MmUxODExNGQyNDA3MTBmZDU0IiwiaWF0IjoxNzU4MDkxODY2LCJleHAiOjE3NTg2OTY2NjZ9.jRM62PelEt1YUxxjD7inJ74KBlUsCLZ-2ROTkImyryc",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"token\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudTA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjUwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFudSIsImlkIjoiNjhjYTU3MmUxODExNGQyNDA3MTBmZDU0IiwiaWF0IjoxNzU4MDkxODY2LCJleHAiOjE3NTg2OTY2NjZ9.jRM62PelEt1YUxxjD7inJ74KBlUsCLZ-2ROTkImyrycY\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/token/verify",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"token",
+						"verify"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "file share",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJtb2JpbGUiOiI5ODc2NTQzMjEwIiwiZnVsbG5hbWUiOiJhYmMiLCJpZCI6IjY4YjZiYWM1ZDFjNzMwNDQ0MjAyZjkzNiIsImlhdCI6MTc1NzkyMzE3OCwiZXhwIjoxNzU4NTI3OTc4fQ.uDn5PhQsro3PRcQsJ9dY8LbkmtcRLWUiLVCdZrQpF2c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"annpurna.gupta@metalbook.com\",\r\n  \"file_url\": \"https://res.cloudinary.com/dypmdlj4o/image/upload/uploads/pexels-matthew-montrone-230847-1324803_d4fcf583-bc75-473d-af9a-cc0714547e65\",\r\n  \"fileId\": \"68c94bbc5869224d5c91c2b0\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/share",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"share"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetchShared",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFiY0BnbWFpbC5jb20iLCJtb2JpbGUiOiI5ODc2NTQzMjEwIiwiZnVsbG5hbWUiOiJhYmMiLCJpZCI6IjY4YjZiYWM1ZDFjNzMwNDQ0MjAyZjkzNiIsImlhdCI6MTc1NzkyMzE3OCwiZXhwIjoxNzU4NTI3OTc4fQ.uDn5PhQsro3PRcQsJ9dY8LbkmtcRLWUiLVCdZrQpF2c",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/share",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"share"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "upload profile-picture",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudTA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjUwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFudSIsImlkIjoiNjhjYTU3MmUxODExNGQyNDA3MTBmZDU0IiwiaWF0IjoxNzU4MDkxMTEwLCJleHAiOjE3NTg2OTU5MTB9.2hLzm9h7TSnkUd1GIyjh-Su3QlWMnHffRKGtkpm2xlk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "picture",
+							"type": "file",
+							"src": "/C:/Users/Admin/Downloads/sunder-muthukumaran-fd6K_OFlnRA-unsplash.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/profile-picture",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"profile-picture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "fetch profile-picture",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudTA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjUwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFudSIsImlkIjoiNjhjYTU3MmUxODExNGQyNDA3MTBmZDU0IiwiaWF0IjoxNzU4MDkxMTEwLCJleHAiOjE3NTg2OTU5MTB9.2hLzm9h7TSnkUd1GIyjh-Su3QlWMnHffRKGtkpm2xlk",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/profile-picture",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"profile-picture"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createFile",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFudTA0QGdtYWlsLmNvbSIsIm1vYmlsZSI6IjUwNTQwMzg1MTkiLCJmdWxsbmFtZSI6ImFudSIsImlkIjoiNjhjYTU3MmUxODExNGQyNDA3MTBmZDU0IiwiaWF0IjoxNzU4MDkxOTk4LCJleHAiOjE3NTg2OTY3OTh9.uIPaenjbe-Pt8Y_8MXqgvtx0qI2gVRuE5EPd_zKNDac",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "file",
+							"type": "file",
+							"src": "/C:/Users/Admin/Downloads/pexels-matthew-montrone-230847-1324803.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/file",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"file"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "downloadFile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://file-system-xi.vercel.app/api/file/download/68b9289bbe88f1b4295d47a8",
+					"protocol": "https",
+					"host": [
+						"file-system-xi",
+						"vercel",
+						"app"
+					],
+					"path": [
+						"api",
+						"file",
+						"download",
+						"68b9289bbe88f1b4295d47a8"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
